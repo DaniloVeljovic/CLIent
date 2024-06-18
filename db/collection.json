@@ -32,5 +32,67 @@
         }
       }
     ]
+  },
+  {
+    "Id": 2,
+    "Name": "Delivery Location Service",
+    "Requests": [
+      {
+        "Id": 1,
+        "Name": "Local - GET Pickup point by id",
+        "Verb": "GET",
+        "Url": "http://localhost:8080/api/locations/5bee967cfccc019e567884f2479440ec84c0624fd93c0921892c5609d62a4c43",
+        "Headers": {
+          "Authorization": "Bearer eyJraWQiOiJwbGF0Zm9ybS1pYW0tdmNlaHloajYiLCJhbGciOiJFUzI1NiJ9.eyJzdWIiOiJhZmYwOGJlNC04MGYwLTQ2ODItYTliOS1lZmI3MDc1NzE1ZGYiLCJodHRwczovL2lkZW50aXR5LnphbGFuZG8uY29tL3JlYWxtIjoidXNlcnMiLCJodHRwczovL2lkZW50aXR5LnphbGFuZG8uY29tL3Rva2VuIjoiQmVhcmVyIiwiaHR0cHM6Ly9pZGVudGl0eS56YWxhbmRvLmNvbS9tYW5hZ2VkLWlkIjoiZHZlbGpvdmljIiwiYXpwIjoienRva2VuIiwiaHR0cHM6Ly9pZGVudGl0eS56YWxhbmRvLmNvbS9icCI6IjgxMGQxZDAwLTQzMTItNDNlNS1iZDMxLWQ4MzczZmRkMjRjNyIsImF1dGhfdGltZSI6MTcxNjgwMTE3NCwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS56YWxhbmRvLmNvbSIsImV4cCI6MTcxODc1NDE0NCwiaWF0IjoxNzE4NzM5NzM0fQ.R2kfEcuA2AFnU5dGFtvI6guar4nhHrdNdJUKHFMkSR4g8SJNbWUNS2jhCJhynbDhbda3QD_NnlxQnekMdofKbg",
+          "Content-Type": "application/json"
+        },
+        "Body": {}
+      },
+      {
+        "Id": 2,
+        "Name": "Staging - GET Pickup point by id",
+        "Verb": "GET",
+        "Url": "https://delivery-locations.logistics-test.zalan.do/api/locations/5bee967cfccc019e567884f2479440ec84c0624fd93c0921892c5609d62a4c43",
+        "Headers": {
+          "Authorization": "Bearer eyJraWQiOiJwbGF0Zm9ybS1pYW0tdmNlaHloajYiLCJhbGciOiJFUzI1NiJ9.eyJzdWIiOiJhZmYwOGJlNC04MGYwLTQ2ODItYTliOS1lZmI3MDc1NzE1ZGYiLCJodHRwczovL2lkZW50aXR5LnphbGFuZG8uY29tL3JlYWxtIjoidXNlcnMiLCJodHRwczovL2lkZW50aXR5LnphbGFuZG8uY29tL3Rva2VuIjoiQmVhcmVyIiwiaHR0cHM6Ly9pZGVudGl0eS56YWxhbmRvLmNvbS9tYW5hZ2VkLWlkIjoiZHZlbGpvdmljIiwiYXpwIjoienRva2VuIiwiaHR0cHM6Ly9pZGVudGl0eS56YWxhbmRvLmNvbS9icCI6IjgxMGQxZDAwLTQzMTItNDNlNS1iZDMxLWQ4MzczZmRkMjRjNyIsImF1dGhfdGltZSI6MTcxNjgwMTE3NCwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS56YWxhbmRvLmNvbSIsImV4cCI6MTcxODc1NDE0NCwiaWF0IjoxNzE4NzM5NzM0fQ.R2kfEcuA2AFnU5dGFtvI6guar4nhHrdNdJUKHFMkSR4g8SJNbWUNS2jhCJhynbDhbda3QD_NnlxQnekMdofKbg",
+          "Content-Type": "application/json"
+        },
+        "Body": {}
+      },
+      {
+        "Id": 3,
+        "Name": "Staging - GET Nearby locations",
+        "Verb": "GET",
+        "Url": "https://delivery-locations.logistics-test.zalan.do/api/locations?max_distance=50000\u0026max_locations=50\u0026delivery_product=https://cep-config-service.cep-test.zalan.do/api/delivery-products/19\u0026city=Helsinki\u0026country_code=FI\u0026zip=00124",
+        "Headers": {
+          "Authorization": "Bearer eyJraWQiOiJwbGF0Zm9ybS1pYW0tdmNlaHloajYiLCJhbGciOiJFUzI1NiJ9.eyJzdWIiOiJhZmYwOGJlNC04MGYwLTQ2ODItYTliOS1lZmI3MDc1NzE1ZGYiLCJodHRwczovL2lkZW50aXR5LnphbGFuZG8uY29tL3JlYWxtIjoidXNlcnMiLCJodHRwczovL2lkZW50aXR5LnphbGFuZG8uY29tL3Rva2VuIjoiQmVhcmVyIiwiaHR0cHM6Ly9pZGVudGl0eS56YWxhbmRvLmNvbS9tYW5hZ2VkLWlkIjoiZHZlbGpvdmljIiwiYXpwIjoienRva2VuIiwiaHR0cHM6Ly9pZGVudGl0eS56YWxhbmRvLmNvbS9icCI6IjgxMGQxZDAwLTQzMTItNDNlNS1iZDMxLWQ4MzczZmRkMjRjNyIsImF1dGhfdGltZSI6MTcxNjgwMTE3NCwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS56YWxhbmRvLmNvbSIsImV4cCI6MTcxODc1NDE0NCwiaWF0IjoxNzE4NzM5NzM0fQ.R2kfEcuA2AFnU5dGFtvI6guar4nhHrdNdJUKHFMkSR4g8SJNbWUNS2jhCJhynbDhbda3QD_NnlxQnekMdofKbg"
+        },
+        "Body": {}
+      },
+      {
+        "Id": 0,
+        "Name": "Sample name",
+        "Verb": "GET",
+        "Url": "http://localhost:7979/jolokia/read/metrics:*",
+        "Headers": {},
+        "Body": {}
+      },
+      {
+        "Id": 0,
+        "Name": "Sample name",
+        "Verb": "GET",
+        "Url": "http://localhost:7979/jolokia/read/metrics:*",
+        "Headers": {},
+        "Body": {}
+      },
+      {
+        "Id": 0,
+        "Name": "test",
+        "Verb": "GET",
+        "Url": "http://localhost:7979/jolokia/read/metrics:*",
+        "Headers": {},
+        "Body": {}
+      }
+    ]
   }
 ]

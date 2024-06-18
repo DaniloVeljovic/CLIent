@@ -78,7 +78,7 @@ func main() {
 	responseViewer.SetBorder(true).SetTitle("Response (v)")
 
 	var activeRequest *Request
-	//var activeCollection *Collection
+	var activeCollection *Collection
 
 	for i := range collections {
 		collection := &collections[i]
@@ -86,7 +86,7 @@ func main() {
 			requestsPanel.Clear()
 
 			for j := range collection.Requests {
-				//activeCollection = &collections[j]
+				activeCollection = collection
 				request := &collection.Requests[j]
 				requestsPanel.AddItem(request.Name, "", 0, func() {
 					activeRequest = request
@@ -128,10 +128,52 @@ func main() {
 					json.Unmarshal([]byte(lines[3]), &activeRequest.Body)
 					saveCollections(collections)
 				}
+			} else {
+				text := requestEditor.GetText()
+				lines := strings.SplitN(text, "\n", 5)
+				if len(lines) == 5 {
+					request := Request{}
+					request.Verb = lines[1]
+					request.Url = lines[2]
+					json.Unmarshal([]byte(lines[3]), &request.Headers)
+					json.Unmarshal([]byte(lines[4]), &request.Body)
+					request.Name = lines[0]
+					activeRequest = &request
+					activeCollection.Requests = append(activeCollection.Requests, request)
+					saveCollections(collections)
+				}
+			}
+			requestsPanel.Clear()
+			for j := range activeCollection.Requests {
+				request := &activeCollection.Requests[j]
+				requestsPanel.AddItem(request.Name, "", 0, func() {
+					activeRequest = request
+					builder := strings.Builder{}
+					builder.WriteString(request.Verb)
+					builder.WriteString("\n")
+					builder.WriteString(request.Url)
+					builder.WriteString("\n")
+					headers, _ := json.Marshal(request.Headers)
+					builder.WriteString(string(headers))
+					builder.WriteString("\n")
+					body, _ := json.Marshal(request.Body)
+					builder.WriteString(string(body))
+					requestEditor.SetText(builder.String(), true)
+				})
 			}
 			app.SetFocus(mainPanel)
 		} else if event.Key() == tcell.KeyRune {
 			if app.GetFocus() != requestEditor {
+				if app.GetFocus() == requestsPanel {
+					switch event.Rune() {
+					case 'a':
+						app.SetFocus(requestEditor)
+						requestEditor.SetText("", true)
+						activeRequest = nil
+						return nil
+					}
+				}
+
 				switch event.Rune() {
 				case 'c':
 					app.SetFocus(collectionsPanel)
