@@ -68,31 +68,12 @@
           "Authorization": "Bearer eyJraWQiOiJwbGF0Zm9ybS1pYW0tdmNlaHloajYiLCJhbGciOiJFUzI1NiJ9.eyJzdWIiOiJhZmYwOGJlNC04MGYwLTQ2ODItYTliOS1lZmI3MDc1NzE1ZGYiLCJodHRwczovL2lkZW50aXR5LnphbGFuZG8uY29tL3JlYWxtIjoidXNlcnMiLCJodHRwczovL2lkZW50aXR5LnphbGFuZG8uY29tL3Rva2VuIjoiQmVhcmVyIiwiaHR0cHM6Ly9pZGVudGl0eS56YWxhbmRvLmNvbS9tYW5hZ2VkLWlkIjoiZHZlbGpvdmljIiwiYXpwIjoienRva2VuIiwiaHR0cHM6Ly9pZGVudGl0eS56YWxhbmRvLmNvbS9icCI6IjgxMGQxZDAwLTQzMTItNDNlNS1iZDMxLWQ4MzczZmRkMjRjNyIsImF1dGhfdGltZSI6MTcxNjgwMTE3NCwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS56YWxhbmRvLmNvbSIsImV4cCI6MTcxODc1NDE0NCwiaWF0IjoxNzE4NzM5NzM0fQ.R2kfEcuA2AFnU5dGFtvI6guar4nhHrdNdJUKHFMkSR4g8SJNbWUNS2jhCJhynbDhbda3QD_NnlxQnekMdofKbg"
         },
         "Body": {}
-      },
-      {
-        "Id": 0,
-        "Name": "Sample name",
-        "Verb": "GET",
-        "Url": "http://localhost:7979/jolokia/read/metrics:*",
-        "Headers": {},
-        "Body": {}
-      },
-      {
-        "Id": 0,
-        "Name": "Sample name",
-        "Verb": "GET",
-        "Url": "http://localhost:7979/jolokia/read/metrics:*",
-        "Headers": {},
-        "Body": {}
-      },
-      {
-        "Id": 0,
-        "Name": "test",
-        "Verb": "GET",
-        "Url": "http://localhost:7979/jolokia/read/metrics:*",
-        "Headers": {},
-        "Body": {}
       }
     ]
+  },
+  {
+    "Id": 0,
+    "Name": "Test collection",
+    "Requests": []
   }
 ]

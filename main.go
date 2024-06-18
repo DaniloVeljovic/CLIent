@@ -84,10 +84,11 @@ func main() {
 		collection := &collections[i]
 		collectionsPanel.AddItem(collection.Name, "", 0, func() {
 			requestsPanel.Clear()
+			activeCollection = collection
 
 			for j := range collection.Requests {
-				activeCollection = collection
 				request := &collection.Requests[j]
+				activeRequest = request
 				requestsPanel.AddItem(request.Name, "", 0, func() {
 					activeRequest = request
 					builder := strings.Builder{}
@@ -118,7 +119,19 @@ func main() {
 
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Key() == tcell.KeyEsc {
-			if activeRequest != nil {
+			if activeCollection == nil && activeRequest == nil {
+				collection := Collection{
+					Id:       0,
+					Name:     requestEditor.GetText(),
+					Requests: []Request{},
+				}
+				activeCollection = &collection
+				collectionsPanel.AddItem(activeCollection.Name, "", 0, func() {
+					activeRequest = nil
+				})
+				collections = append(collections, collection)
+				saveCollections(collections)
+			} else if activeRequest != nil {
 				text := requestEditor.GetText()
 				lines := strings.SplitN(text, "\n", 4)
 				if len(lines) == 4 {
@@ -130,14 +143,14 @@ func main() {
 				}
 			} else {
 				text := requestEditor.GetText()
-				lines := strings.SplitN(text, "\n", 5)
-				if len(lines) == 5 {
+				lines := strings.SplitN(text, "\n", 4)
+				if len(lines) == 4 {
 					request := Request{}
-					request.Verb = lines[1]
-					request.Url = lines[2]
-					json.Unmarshal([]byte(lines[3]), &request.Headers)
-					json.Unmarshal([]byte(lines[4]), &request.Body)
-					request.Name = lines[0]
+					request.Verb = lines[0]
+					request.Url = lines[1]
+					json.Unmarshal([]byte(lines[2]), &request.Headers)
+					json.Unmarshal([]byte(lines[3]), &request.Body)
+					request.Name = "sample"
 					activeRequest = &request
 					activeCollection.Requests = append(activeCollection.Requests, request)
 					saveCollections(collections)
@@ -170,6 +183,15 @@ func main() {
 						app.SetFocus(requestEditor)
 						requestEditor.SetText("", true)
 						activeRequest = nil
+						return nil
+					}
+				} else if app.GetFocus() == collectionsPanel {
+					switch event.Rune() {
+					case 'a':
+						app.SetFocus(requestEditor)
+						requestEditor.SetText("", true)
+						activeRequest = nil
+						activeCollection = nil
 						return nil
 					}
 				}
