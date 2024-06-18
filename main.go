@@ -85,6 +85,7 @@ func main() {
 		collectionsPanel.AddItem(collection.Name, "", 0, func() {
 			requestsPanel.Clear()
 			activeCollection = collection
+			activeRequest = nil
 
 			for j := range collection.Requests {
 				request := &collection.Requests[j]
@@ -126,25 +127,7 @@ func main() {
 					Requests: []Request{},
 				}
 				activeCollection = &collection
-				collectionsPanel.AddItem(activeCollection.Name, "", 0, func() {
-					activeRequest = nil
-				})
 				collections = append(collections, collection)
-				saveCollections(collections)
-			} else if activeRequest != nil {
-				text := requestEditor.GetText()
-				lines := strings.SplitN(text, "\n", 4)
-				if len(lines) == 4 {
-					activeRequest.Verb = lines[0]
-					activeRequest.Url = lines[1]
-					json.Unmarshal([]byte(lines[2]), &activeRequest.Headers)
-					json.Unmarshal([]byte(lines[3]), &activeRequest.Body)
-					saveCollections(collections)
-				}
-			} else if activeCollection != nil && activeRequest == nil {
-				text := requestEditor.GetText()
-				activeCollection.Name = text
-				collectionsPanel.Clear()
 				for i := range collections {
 					collection := &collections[i]
 					collectionsPanel.AddItem(collection.Name, "", 0, func() {
@@ -173,6 +156,16 @@ func main() {
 					})
 				}
 				saveCollections(collections)
+			} else if activeRequest != nil {
+				text := requestEditor.GetText()
+				lines := strings.SplitN(text, "\n", 4)
+				if len(lines) == 4 {
+					activeRequest.Verb = lines[0]
+					activeRequest.Url = lines[1]
+					json.Unmarshal([]byte(lines[2]), &activeRequest.Headers)
+					json.Unmarshal([]byte(lines[3]), &activeRequest.Body)
+					saveCollections(collections)
+				}
 			} else {
 				text := requestEditor.GetText()
 				lines := strings.SplitN(text, "\n", 4)
