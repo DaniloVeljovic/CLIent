@@ -1,0 +1,36 @@
+[
+  {
+    "Id": 1,
+    "Name": "Postman",
+    "Requests": [
+      {
+        "Id": 1,
+        "Name": "GET Postman Echo",
+        "Verb": "GET",
+        "Url": "https://www.postman-echo.com/get",
+        "Headers": {
+          "Authorization": "Bearer token",
+          "Content-Type": "application/json"
+        },
+        "Body": {
+          "Test": "test",
+          "danilo": "danilo",
+          "miki": "miki",
+          "veljko": "veljko"
+        }
+      },
+      {
+        "Id": 2,
+        "Name": "POST Postman Echo",
+        "Verb": "POST",
+        "Url": "https://www.postman-echo.com/post",
+        "Headers": {
+          "Content-Type": "application/json"
+        },
+        "Body": {
+          "Test": "test"
+        }
+      }
+    ]
+  }
+]
