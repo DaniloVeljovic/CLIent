@@ -88,7 +88,7 @@ func main() {
 
 			for j := range collection.Requests {
 				request := &collection.Requests[j]
-				activeRequest = request
+
 				requestsPanel.AddItem(request.Name, "", 0, func() {
 					activeRequest = request
 					builder := strings.Builder{}
@@ -141,6 +141,38 @@ func main() {
 					json.Unmarshal([]byte(lines[3]), &activeRequest.Body)
 					saveCollections(collections)
 				}
+			} else if activeCollection != nil && activeRequest == nil {
+				text := requestEditor.GetText()
+				activeCollection.Name = text
+				collectionsPanel.Clear()
+				for i := range collections {
+					collection := &collections[i]
+					collectionsPanel.AddItem(collection.Name, "", 0, func() {
+						requestsPanel.Clear()
+						activeCollection = collection
+
+						for j := range collection.Requests {
+							request := &collection.Requests[j]
+
+							requestsPanel.AddItem(request.Name, "", 0, func() {
+								activeRequest = request
+								builder := strings.Builder{}
+								builder.WriteString(request.Verb)
+								builder.WriteString("\n")
+								builder.WriteString(request.Url)
+								builder.WriteString("\n")
+								headers, _ := json.Marshal(request.Headers)
+								builder.WriteString(string(headers))
+								builder.WriteString("\n")
+								body, _ := json.Marshal(request.Body)
+								builder.WriteString(string(body))
+								requestEditor.SetText(builder.String(), true)
+							})
+						}
+						app.SetFocus(requestsPanel)
+					})
+				}
+				saveCollections(collections)
 			} else {
 				text := requestEditor.GetText()
 				lines := strings.SplitN(text, "\n", 4)
@@ -180,18 +212,35 @@ func main() {
 				if app.GetFocus() == requestsPanel {
 					switch event.Rune() {
 					case 'a':
+						if activeRequest != nil {
+							builder := strings.Builder{}
+							builder.WriteString(activeRequest.Verb)
+							builder.WriteString("\n")
+							builder.WriteString(activeRequest.Url)
+							builder.WriteString("\n")
+							headers, _ := json.Marshal(activeRequest.Headers)
+							builder.WriteString(string(headers))
+							builder.WriteString("\n")
+							body, _ := json.Marshal(activeRequest.Body)
+							builder.WriteString(string(body))
+							requestEditor.SetText(builder.String(), true)
+						} else {
+							requestEditor.SetText("", true)
+						}
 						app.SetFocus(requestEditor)
-						requestEditor.SetText("", true)
-						activeRequest = nil
 						return nil
 					}
 				} else if app.GetFocus() == collectionsPanel {
 					switch event.Rune() {
 					case 'a':
+						if activeCollection != nil {
+							requestEditor.SetText(activeCollection.Name, true)
+						} else {
+							requestEditor.SetText("", true)
+							activeRequest = nil
+							activeCollection = nil
+						}
 						app.SetFocus(requestEditor)
-						requestEditor.SetText("", true)
-						activeRequest = nil
-						activeCollection = nil
 						return nil
 					}
 				}

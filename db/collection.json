@@ -73,7 +73,28 @@
   },
   {
     "Id": 0,
-    "Name": "Test collection",
+    "Name": "",
+    "Requests": [
+      {
+        "Id": 0,
+        "Name": "sample",
+        "Verb": "GET",
+        "Url": "http://localhost:7979/jolokia/read/metrics:*",
+        "Headers": {
+          "Content-Type": "application/json"
+        },
+        "Body": {}
+      }
+    ]
+  },
+  {
+    "Id": 0,
+    "Name": "",
+    "Requests": []
+  },
+  {
+    "Id": 0,
+    "Name": "",
     "Requests": []
   }
 ]
