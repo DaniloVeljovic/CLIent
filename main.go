@@ -13,13 +13,11 @@ import (
 )
 
 type Collection struct {
-	Id       int
 	Name     string
 	Requests []Request
 }
 
 type Request struct {
-	Id      int
 	Name    string
 	Verb    string
 	Url     string
@@ -93,6 +91,8 @@ func main() {
 				requestsPanel.AddItem(request.Name, "", 0, func() {
 					activeRequest = request
 					builder := strings.Builder{}
+					builder.WriteString(request.Name)
+					builder.WriteString("\n")
 					builder.WriteString(request.Verb)
 					builder.WriteString("\n")
 					builder.WriteString(request.Url)
@@ -122,10 +122,10 @@ func main() {
 		if event.Key() == tcell.KeyEsc {
 			if activeCollection == nil && activeRequest == nil {
 				collection := Collection{
-					Id:       0,
 					Name:     requestEditor.GetText(),
 					Requests: []Request{},
 				}
+				collectionsPanel.Clear()
 				activeCollection = &collection
 				collections = append(collections, collection)
 				for i := range collections {
@@ -140,6 +140,8 @@ func main() {
 							requestsPanel.AddItem(request.Name, "", 0, func() {
 								activeRequest = request
 								builder := strings.Builder{}
+								builder.WriteString(request.Name)
+								builder.WriteString("\n")
 								builder.WriteString(request.Verb)
 								builder.WriteString("\n")
 								builder.WriteString(request.Url)
@@ -156,26 +158,16 @@ func main() {
 					})
 				}
 				saveCollections(collections)
-			} else if activeRequest != nil {
-				text := requestEditor.GetText()
-				lines := strings.SplitN(text, "\n", 4)
-				if len(lines) == 4 {
-					activeRequest.Verb = lines[0]
-					activeRequest.Url = lines[1]
-					json.Unmarshal([]byte(lines[2]), &activeRequest.Headers)
-					json.Unmarshal([]byte(lines[3]), &activeRequest.Body)
-					saveCollections(collections)
-				}
 			} else {
 				text := requestEditor.GetText()
-				lines := strings.SplitN(text, "\n", 4)
-				if len(lines) == 4 {
+				lines := strings.SplitN(text, "\n", 5)
+				if len(lines) == 5 {
 					request := Request{}
-					request.Verb = lines[0]
-					request.Url = lines[1]
-					json.Unmarshal([]byte(lines[2]), &request.Headers)
-					json.Unmarshal([]byte(lines[3]), &request.Body)
-					request.Name = "sample"
+					request.Name = lines[0]
+					request.Verb = lines[1]
+					request.Url = lines[2]
+					json.Unmarshal([]byte(lines[3]), &request.Headers)
+					json.Unmarshal([]byte(lines[4]), &request.Body)
 					activeRequest = &request
 					activeCollection.Requests = append(activeCollection.Requests, request)
 					saveCollections(collections)
@@ -187,6 +179,8 @@ func main() {
 				requestsPanel.AddItem(request.Name, "", 0, func() {
 					activeRequest = request
 					builder := strings.Builder{}
+					builder.WriteString(request.Name)
+					builder.WriteString("\n")
 					builder.WriteString(request.Verb)
 					builder.WriteString("\n")
 					builder.WriteString(request.Url)
@@ -205,34 +199,16 @@ func main() {
 				if app.GetFocus() == requestsPanel {
 					switch event.Rune() {
 					case 'a':
-						if activeRequest != nil {
-							builder := strings.Builder{}
-							builder.WriteString(activeRequest.Verb)
-							builder.WriteString("\n")
-							builder.WriteString(activeRequest.Url)
-							builder.WriteString("\n")
-							headers, _ := json.Marshal(activeRequest.Headers)
-							builder.WriteString(string(headers))
-							builder.WriteString("\n")
-							body, _ := json.Marshal(activeRequest.Body)
-							builder.WriteString(string(body))
-							requestEditor.SetText(builder.String(), true)
-						} else {
-							requestEditor.SetText("", true)
-						}
+						requestEditor.SetText("", true)
 						app.SetFocus(requestEditor)
 						return nil
 					}
 				} else if app.GetFocus() == collectionsPanel {
 					switch event.Rune() {
 					case 'a':
-						if activeCollection != nil {
-							requestEditor.SetText(activeCollection.Name, true)
-						} else {
-							requestEditor.SetText("", true)
-							activeRequest = nil
-							activeCollection = nil
-						}
+						requestEditor.SetText("", true)
+						activeRequest = nil
+						activeCollection = nil
 						app.SetFocus(requestEditor)
 						return nil
 					}
@@ -272,12 +248,12 @@ func main() {
 
 func CallApi(text string) string {
 	client := &http.Client{}
-	params := strings.SplitN(text, "\n", 4)
+	params := strings.SplitN(text, "\n", 5)
 	if len(params) < 4 {
-		return "Invalid input format. Expected: <METHOD> <URL> <HEADERS_JSON> <BODY>"
+		return "Invalid input format. Expected: <NAME> <METHOD> <URL> <HEADERS_JSON> <BODY>"
 	}
 
-	method, url, headersJson, bodyJson := params[0], params[1], params[2], params[3]
+	_, method, url, headersJson, bodyJson := params[0], params[1], params[2], params[3], params[4]
 
 	req, err := http.NewRequest(method, url, bytes.NewBufferString(bodyJson))
 	if err != nil {
