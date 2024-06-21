@@ -20,7 +20,6 @@ type Collection struct {
 func (c *Collection) RemoveRequest(requestName string) {
 	for i, req := range c.Requests {
 		if req.Name == requestName {
-			// Remove the request from the slice
 			c.Requests = append(c.Requests[:i], c.Requests[i+1:]...)
 			return
 		}
@@ -80,10 +79,12 @@ func main() {
 	collectionsPanel.SetBorder(true).SetTitle("Collections (c)")
 	requestsPanel := tview.NewList()
 	requestsPanel.SetBorder(true).SetTitle("Requests (r)")
+	environmentPanel := tview.NewBox()
+	environmentPanel.SetBorder(true).SetTitle("Environment (v)")
 	requestEditor := tview.NewTextArea()
-	requestEditor.SetBorder(true).SetTitle("Request Editor (e)")
+	requestEditor.SetBorder(true).SetTitle("Editor (e)")
 	responseViewer := tview.NewTextView()
-	responseViewer.SetBorder(true).SetTitle("Response (v)")
+	responseViewer.SetBorder(true).SetTitle("Output (o)")
 
 	var activeRequest *Request
 	var activeCollection *Collection
@@ -121,6 +122,7 @@ func main() {
 
 	leftPanel := tview.NewFlex().SetDirection(tview.FlexRow).
 		AddItem(collectionsPanel, 0, 1, false).
+		AddItem(environmentPanel, 0, 1, false).
 		AddItem(requestsPanel, 0, 1, false)
 
 	mainPanel := tview.NewFlex().
@@ -372,8 +374,11 @@ func main() {
 					response := CallApi(requestEditor.GetText())
 					responseViewer.SetText(response)
 					return nil
-				case 'v':
+				case 'o':
 					app.SetFocus(responseViewer)
+					return nil
+				case 'v':
+					app.SetFocus(environmentPanel)
 					return nil
 				}
 			}

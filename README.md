@@ -1,13 +1,8 @@
 # CLIent
 
-Todo:
-1. Edit collections
-2. Edit request
-3. Delete collections
-4. Delete request
-5. 
-
-
+TODO: 
+1. Environment variables
+2. 
 
 How to add collections?
 
