@@ -1,5 +1,14 @@
 # CLIent
 
+Todo:
+1. Edit collections
+2. Edit request
+3. Delete collections
+4. Delete request
+5. 
+
+
+
 How to add collections?
 
 c -> a
