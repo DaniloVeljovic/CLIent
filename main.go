@@ -35,6 +35,11 @@ type Request struct {
 	Body    interface{}
 }
 
+type EnvironmentVariables struct {
+	Key   string
+	Value string
+}
+
 func getCollections() []Collection {
 	file, err := os.ReadFile("./db/collection.json")
 	if err != nil {
@@ -80,6 +85,7 @@ func main() {
 	collectionsPanel.SetBorder(true).SetTitle("Collections (c)")
 	requestsPanel := tview.NewList()
 	requestsPanel.SetBorder(true).SetTitle("Requests (r)")
+	environmentVariables := getEnvironmentVariables()
 	environmentPanel := tview.NewTextArea()
 	environmentPanel.SetBorder(true).SetTitle("Environment (v)")
 	requestEditor := tview.NewTextArea()
@@ -89,6 +95,12 @@ func main() {
 
 	var activeRequest *Request
 	var activeCollection *Collection
+
+	builder := strings.Builder{}
+	for i := range environmentVariables {
+		builder.WriteString(environmentVariables[i].Key + "=" + environmentVariables[i].Value + "\n")
+	}
+	environmentPanel.SetText(builder.String(), true)
 
 	for i := range collections {
 		collection := &collections[i]
@@ -396,8 +408,26 @@ func main() {
 	}
 }
 
+func getEnvironmentVariables() []EnvironmentVariables {
+	file, err := os.ReadFile("./db/environment.json")
+	if err != nil {
+		fmt.Println("Error reading file:", err)
+		return nil
+	}
+
+	var environmentVariables []EnvironmentVariables
+
+	err = json.Unmarshal(file, &environmentVariables)
+	if err != nil {
+		fmt.Println("Error unmarshalling JSON:", err)
+		return nil
+	}
+
+	return environmentVariables
+}
+
 func saveEnvironmentVariables() {
-	panic("unimplemented")
+
 }
 
 func CallApi(text string) string {
