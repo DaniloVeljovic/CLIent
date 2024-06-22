@@ -4,12 +4,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/gdamore/tcell/v2"
-	"github.com/rivo/tview"
 	"io"
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/gdamore/tcell/v2"
+	"github.com/rivo/tview"
 )
 
 type Collection struct {
@@ -79,7 +80,7 @@ func main() {
 	collectionsPanel.SetBorder(true).SetTitle("Collections (c)")
 	requestsPanel := tview.NewList()
 	requestsPanel.SetBorder(true).SetTitle("Requests (r)")
-	environmentPanel := tview.NewBox()
+	environmentPanel := tview.NewTextArea()
 	environmentPanel.SetBorder(true).SetTitle("Environment (v)")
 	requestEditor := tview.NewTextArea()
 	requestEditor.SetBorder(true).SetTitle("Editor (e)")
@@ -132,7 +133,9 @@ func main() {
 
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Key() == tcell.KeyEsc {
-			if activeCollection == nil && activeRequest == nil {
+			if app.GetFocus() == environmentPanel {
+				saveEnvironmentVariables()
+			} else if activeCollection == nil && activeRequest == nil {
 				collection := Collection{
 					Name:     requestEditor.GetText(),
 					Requests: []Request{},
@@ -248,6 +251,8 @@ func main() {
 				})
 			}
 			app.SetFocus(mainPanel)
+		} else if app.GetFocus() == environmentPanel {
+
 		} else if event.Key() == tcell.KeyRune {
 			if app.GetFocus() != requestEditor {
 				if app.GetFocus() == requestsPanel {
@@ -389,6 +394,10 @@ func main() {
 	if err := app.SetRoot(mainPanel, true).SetFocus(mainPanel).Run(); err != nil {
 		panic(err)
 	}
+}
+
+func saveEnvironmentVariables() {
+	panic("unimplemented")
 }
 
 func CallApi(text string) string {
