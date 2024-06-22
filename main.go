@@ -171,7 +171,20 @@ func main() {
 				}
 				saveCollections(collections)
 			} else if activeCollection != nil && activeRequest == nil {
-				activeCollection.Name = requestEditor.GetText()
+				params := strings.Split(requestEditor.GetText(), "\n")
+				if len(params) == 1 {
+					activeCollection.Name = requestEditor.GetText()
+				} else {
+					request := Request{}
+					request.Name = params[0]
+					request.Verb = params[1]
+					request.Url = params[2]
+					json.Unmarshal([]byte(params[3]), &request.Headers)
+					json.Unmarshal([]byte(params[4]), &request.Body)
+					activeRequest = &request
+					activeCollection.Requests = append(activeCollection.Requests, request)
+					saveCollections(collections)
+				}
 				collectionsPanel.Clear()
 				for i := range collections {
 					collection := &collections[i]
@@ -211,20 +224,6 @@ func main() {
 					activeRequest.Url = lines[2]
 					json.Unmarshal([]byte(lines[3]), &activeRequest.Headers)
 					json.Unmarshal([]byte(lines[4]), &activeRequest.Body)
-					saveCollections(collections)
-				}
-			} else {
-				text := requestEditor.GetText()
-				lines := strings.SplitN(text, "\n", 5)
-				if len(lines) == 5 {
-					request := Request{}
-					request.Name = lines[0]
-					request.Verb = lines[1]
-					request.Url = lines[2]
-					json.Unmarshal([]byte(lines[3]), &request.Headers)
-					json.Unmarshal([]byte(lines[4]), &request.Body)
-					activeRequest = &request
-					activeCollection.Requests = append(activeCollection.Requests, request)
 					saveCollections(collections)
 				}
 			}
