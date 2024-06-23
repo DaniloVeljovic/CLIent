@@ -146,7 +146,25 @@ func main() {
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Key() == tcell.KeyEsc {
 			if app.GetFocus() == environmentPanel {
-				saveEnvironmentVariables()
+				variables := environmentPanel.GetText()
+				lines := strings.Split(variables, "\n")
+
+				var envVars []EnvironmentVariables
+				for _, line := range lines {
+					if line == "" {
+						continue
+					}
+					parts := strings.SplitN(line, "=", 2)
+					if len(parts) == 2 {
+						envVars = append(envVars, EnvironmentVariables{
+							Key:   parts[0],
+							Value: parts[1],
+						})
+					}
+				}
+				environmentVariables = envVars
+				saveEnvVariables(environmentVariables)
+
 			} else if activeCollection == nil && activeRequest == nil {
 				collection := Collection{
 					Name:     requestEditor.GetText(),
@@ -426,10 +444,6 @@ func getEnvironmentVariables() []EnvironmentVariables {
 	return environmentVariables
 }
 
-func saveEnvironmentVariables() {
-
-}
-
 func CallApi(text string) string {
 	client := &http.Client{}
 	params := strings.SplitN(text, "\n", 5)
@@ -466,4 +480,24 @@ func CallApi(text string) string {
 	}
 
 	return string(body)
+}
+
+func saveEnvVariables(environmentVariables []EnvironmentVariables) {
+	file, err := os.Create("./db/environment.json")
+	if err != nil {
+		fmt.Println("Error creating file:", err)
+		return
+	}
+	defer file.Close()
+
+	data, err := json.MarshalIndent(environmentVariables, "", "  ")
+	if err != nil {
+		fmt.Println("Error marshalling JSON:", err)
+		return
+	}
+
+	_, err = file.Write(data)
+	if err != nil {
+		fmt.Println("Error writing to file:", err)
+	}
 }
